@@ -5,7 +5,7 @@
 // ===================================
 
 import { Cliente, TipoCliente } from "@/types";
-import { User, MapPin, Building2 } from "lucide-react";
+import { User, MapPin, Building2, Phone } from "lucide-react";
 
 interface ClienteFormProps {
     cliente: Cliente;
@@ -43,22 +43,41 @@ export default function ClienteForm({ cliente, onChange }: ClienteFormProps) {
                 </h2>
             </div>
 
-            {/* Nombre del cliente */}
-            <div className="space-y-2">
-                <label className="text-sm font-medium text-joy-green-700">
-                    Nombre completo
-                </label>
-                <input
-                    type="text"
-                    value={cliente.nombre}
-                    onChange={(e) => handleChange("nombre", e.target.value)}
-                    placeholder="Nombre del cliente..."
-                    className="w-full px-4 py-3 rounded-xl border border-joy-green-200 
-                     bg-white/80 backdrop-blur-sm
-                     focus:outline-none focus:ring-2 focus:ring-joy-green-400 focus:border-transparent
-                     placeholder:text-joy-green-300 transition-all duration-200
-                     hover:border-joy-green-300"
-                />
+            {/* Nombre y Teléfono en una fila */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-joy-green-700">
+                        Nombre completo
+                    </label>
+                    <input
+                        type="text"
+                        value={cliente.nombre}
+                        onChange={(e) => handleChange("nombre", e.target.value)}
+                        placeholder="Nombre del cliente..."
+                        className="w-full px-4 py-3 rounded-xl border border-joy-green-200 
+                         bg-white/80 backdrop-blur-sm
+                         focus:outline-none focus:ring-2 focus:ring-joy-green-400 focus:border-transparent
+                         placeholder:text-joy-green-300 transition-all duration-200
+                         hover:border-joy-green-300"
+                    />
+                </div>
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-joy-green-700 flex items-center gap-1.5">
+                        <Phone className="w-3.5 h-3.5" />
+                        Teléfono
+                    </label>
+                    <input
+                        type="tel"
+                        value={cliente.telefono}
+                        onChange={(e) => handleChange("telefono", e.target.value)}
+                        placeholder="Número telefónico..."
+                        className="w-full px-4 py-3 rounded-xl border border-joy-green-200 
+                         bg-white/80 backdrop-blur-sm
+                         focus:outline-none focus:ring-2 focus:ring-joy-green-400 focus:border-transparent
+                         placeholder:text-joy-green-300 transition-all duration-200
+                         hover:border-joy-green-300"
+                    />
+                </div>
             </div>
 
             {/* Tipo de cliente - Toggle */}

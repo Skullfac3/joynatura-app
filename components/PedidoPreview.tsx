@@ -5,7 +5,7 @@
 // ===================================
 
 import { Pedido } from "@/types";
-import { Leaf, User, MapPin, Package, Calendar } from "lucide-react";
+import { Leaf, User, MapPin, Package, Calendar, Phone } from "lucide-react";
 
 interface PedidoPreviewProps {
     pedido: Pedido;
@@ -58,8 +58,8 @@ export default function PedidoPreview({ pedido }: PedidoPreviewProps) {
                     </h2>
                     <span
                         className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${cliente.tipo === "local"
-                                ? "bg-joy-green-100 text-joy-green-700"
-                                : "bg-joy-cream-200 text-joy-gold-600"
+                            ? "bg-joy-green-100 text-joy-green-700"
+                            : "bg-joy-cream-200 text-joy-gold-600"
                             }`}
                     >
                         {cliente.tipo === "local" ? "Local" : "Foráneo"}
@@ -71,6 +71,13 @@ export default function PedidoPreview({ pedido }: PedidoPreviewProps) {
                         <span className="font-medium text-joy-green-700">Nombre:</span>{" "}
                         {cliente.nombre || "—"}
                     </p>
+                    {cliente.telefono && (
+                        <p className="flex items-center gap-1.5">
+                            <Phone className="w-3.5 h-3.5 text-joy-green-500" />
+                            <span className="font-medium text-joy-green-700">Tel:</span>{" "}
+                            {cliente.telefono}
+                        </p>
+                    )}
                 </div>
 
                 <div className="mt-4 flex items-start gap-2">

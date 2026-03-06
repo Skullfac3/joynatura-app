@@ -29,6 +29,7 @@ export interface Producto {
 /** Datos del cliente */
 export interface Cliente {
     nombre: string;
+    telefono: string;
     tipo: TipoCliente;
     direccion: Direccion;
 }
@@ -56,6 +57,7 @@ export const crearDireccionVacia = (): Direccion => ({
 /** Crear un cliente vacío */
 export const crearClienteVacio = (): Cliente => ({
     nombre: "",
+    telefono: "",
     tipo: "local",
     direccion: crearDireccionVacia(),
 });
