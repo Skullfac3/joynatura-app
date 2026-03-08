@@ -59,7 +59,8 @@ export default function ProductoItem({
         onChange({
             ...producto,
             nombre: catalItem.nombre,
-            notas: `$${precio.toFixed(2)}`,
+            precioUnitario: precio,
+            notas: "",
         });
         setBusqueda("");
         setAbierto(false);

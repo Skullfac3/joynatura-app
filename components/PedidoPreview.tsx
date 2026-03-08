@@ -14,6 +14,13 @@ interface PedidoPreviewProps {
 export default function PedidoPreview({ pedido }: PedidoPreviewProps) {
     const { cliente, productos, fecha } = pedido;
 
+    /** Gran total = suma de (precioUnitario × cantidad) de cada producto */
+    const granTotal = productos.reduce(
+        (sum, p) => sum + p.precioUnitario * p.cantidad,
+        0
+    );
+    const totalArticulos = productos.reduce((sum, p) => sum + p.cantidad, 0);
+
     return (
         <div
             id="pedido-preview"
@@ -114,46 +121,62 @@ export default function PedidoPreview({ pedido }: PedidoPreviewProps) {
                     {/* Header */}
                     <div className="grid grid-cols-12 bg-joy-green-50 px-4 py-2.5 text-xs font-semibold text-joy-green-700 uppercase tracking-wider">
                         <div className="col-span-1">#</div>
-                        <div className="col-span-5">Producto</div>
-                        <div className="col-span-2 text-center">Cant.</div>
-                        <div className="col-span-4">Notas</div>
+                        <div className="col-span-4">Producto</div>
+                        <div className="col-span-1 text-center">Cant.</div>
+                        <div className="col-span-2 text-right">P. Unit.</div>
+                        <div className="col-span-2 text-right">Subtotal</div>
+                        <div className="col-span-2 pl-2">Notas</div>
                     </div>
 
                     {/* Rows */}
-                    {productos.map((producto, index) => (
-                        <div
-                            key={producto.id}
-                            className={`grid grid-cols-12 px-4 py-3 text-sm items-center 
+                    {productos.map((producto, index) => {
+                        const subtotal = producto.precioUnitario * producto.cantidad;
+                        return (
+                            <div
+                                key={producto.id}
+                                className={`grid grid-cols-12 px-4 py-3 text-sm items-center 
                 ${index % 2 === 0 ? "bg-white" : "bg-joy-green-50/30"}
                 ${index !== productos.length - 1 ? "border-b border-joy-green-50" : ""}`}
-                        >
-                            <div className="col-span-1 text-joy-green-400 font-medium">
-                                {index + 1}
+                            >
+                                <div className="col-span-1 text-joy-green-400 font-medium">
+                                    {index + 1}
+                                </div>
+                                <div className="col-span-4 font-medium text-gray-800">
+                                    {producto.nombre || "—"}
+                                </div>
+                                <div className="col-span-1 text-center">
+                                    <span className="inline-block px-2 py-0.5 rounded-full bg-joy-cream-100 text-joy-gold-600 font-semibold text-xs">
+                                        ×{producto.cantidad}
+                                    </span>
+                                </div>
+                                <div className="col-span-2 text-right text-gray-600 text-xs">
+                                    {producto.precioUnitario > 0
+                                        ? `$${producto.precioUnitario.toFixed(2)}`
+                                        : "—"}
+                                </div>
+                                <div className="col-span-2 text-right font-semibold text-joy-green-700 text-xs">
+                                    {subtotal > 0
+                                        ? `$${subtotal.toFixed(2)}`
+                                        : "—"}
+                                </div>
+                                <div className="col-span-2 pl-2 text-gray-500 text-xs italic truncate">
+                                    {producto.notas || "—"}
+                                </div>
                             </div>
-                            <div className="col-span-5 font-medium text-gray-800">
-                                {producto.nombre || "—"}
-                            </div>
-                            <div className="col-span-2 text-center">
-                                <span className="inline-block px-2.5 py-0.5 rounded-full bg-joy-cream-100 text-joy-gold-600 font-semibold text-xs">
-                                    ×{producto.cantidad}
-                                </span>
-                            </div>
-                            <div className="col-span-4 text-gray-500 text-xs italic">
-                                {producto.notas || "—"}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                        );
+                    })}
 
-                {/* Totales */}
-                <div className="mt-4 flex justify-end">
-                    <div className="px-4 py-2 rounded-lg bg-joy-green-50 text-sm">
-                        <span className="text-joy-green-600 font-medium">
-                            Total de artículos:{" "}
-                        </span>
-                        <span className="font-bold text-joy-green-800">
-                            {productos.reduce((sum, p) => sum + p.cantidad, 0)}
-                        </span>
+                    {/* Gran Total */}
+                    <div className="grid grid-cols-12 px-4 py-3 bg-joy-green-50 border-t-2 border-joy-green-200">
+                        <div className="col-span-6 text-right font-bold text-joy-green-800 text-sm pr-2">
+                            TOTAL:
+                        </div>
+                        <div className="col-span-2 text-right font-bold text-joy-green-800 text-sm">
+                            ${granTotal.toFixed(2)}
+                        </div>
+                        <div className="col-span-4 pl-2 text-xs text-joy-green-600">
+                            ({totalArticulos} {totalArticulos === 1 ? "artículo" : "artículos"})
+                        </div>
                     </div>
                 </div>
             </div>

@@ -24,6 +24,7 @@ export interface Producto {
     cantidad: number;
     notas: string;
     modo: ModoProducto;
+    precioUnitario: number;
 }
 
 /** Datos del cliente */
@@ -69,4 +70,5 @@ export const crearProductoVacio = (): Producto => ({
     cantidad: 1,
     notas: "",
     modo: "manual",
+    precioUnitario: 0,
 });
