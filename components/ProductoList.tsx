@@ -2,24 +2,58 @@
 
 // ===================================
 // ProductoList - Lista dinámica de productos
+// Con toggle Mayoreo/Menudeo y carga de catálogo
 // ===================================
 
 import { Producto, crearProductoVacio, ModoProducto } from "@/types";
 import ProductoItem from "./ProductoItem";
-import { Plus, ShoppingBag } from "lucide-react";
+import { Plus, ShoppingBag, Store, Truck } from "lucide-react";
+import { useState, useEffect } from "react";
+
+/** Tipo de producto del catálogo */
+interface ProductoCatalogo {
+    id: string;
+    numero: number;
+    nombre: string;
+    precioMayoreo: number;
+    precioMenudeo: number;
+}
 
 interface ProductoListProps {
     productos: Producto[];
     onChange: (productos: Producto[]) => void;
-    /** Modo global de entrada de productos (propagado a cada item) */
+    /** Modo global de entrada de productos */
     modo?: ModoProducto;
 }
 
 export default function ProductoList({
     productos,
     onChange,
-    modo = "manual",
+    modo = "catalogo",
 }: ProductoListProps) {
+    const [catalogo, setCatalogo] = useState<ProductoCatalogo[]>([]);
+    const [tipoPrecio, setTipoPrecio] = useState<"mayoreo" | "menudeo">("mayoreo");
+    const [cargando, setCargando] = useState(false);
+
+    /** Cargar catálogo de productos desde la API */
+    useEffect(() => {
+        const cargarCatalogo = async () => {
+            setCargando(true);
+            try {
+                const res = await fetch("/api/productos");
+                if (res.ok) {
+                    const data = await res.json();
+                    setCatalogo(data);
+                }
+            } catch (error) {
+                console.error("Error al cargar catálogo:", error);
+            } finally {
+                setCargando(false);
+            }
+        };
+        cargarCatalogo();
+    }, []);
+
     /** Agregar un nuevo producto vacío a la lista */
     const agregarProducto = () => {
         onChange([...productos, crearProductoVacio()]);
@@ -56,6 +90,41 @@ export default function ProductoList({
                 </div>
             </div>
 
+            {/* Toggle Mayoreo / Menudeo */}
+            <div className="flex gap-2">
+                <button
+                    type="button"
+                    onClick={() => setTipoPrecio("mayoreo")}
+                    className={`flex-1 py-2.5 px-4 rounded-xl font-medium text-sm transition-all duration-300 flex items-center justify-center gap-2
+                      ${tipoPrecio === "mayoreo"
+                            ? "bg-joy-green-500 text-white shadow-lg shadow-joy-green-200 scale-[1.02]"
+                            : "bg-joy-green-50 text-joy-green-600 hover:bg-joy-green-100"
+                        }`}
+                >
+                    <Truck className="w-4 h-4" />
+                    Mayoreo
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setTipoPrecio("menudeo")}
+                    className={`flex-1 py-2.5 px-4 rounded-xl font-medium text-sm transition-all duration-300 flex items-center justify-center gap-2
+                      ${tipoPrecio === "menudeo"
+                            ? "bg-joy-cream-500 text-white shadow-lg shadow-joy-cream-200 scale-[1.02]"
+                            : "bg-joy-cream-50 text-joy-cream-500 hover:bg-joy-cream-100"
+                        }`}
+                >
+                    <Store className="w-4 h-4" />
+                    Menudeo
+                </button>
+            </div>
+
+            {/* Estado de carga */}
+            {cargando && (
+                <div className="text-sm text-joy-green-400 text-center py-2 animate-pulse">
+                    Cargando catálogo de productos...
+                </div>
+            )}
+
             {/* Lista de productos */}
             <div className="space-y-3">
                 {productos.map((producto) => (
@@ -66,6 +135,8 @@ export default function ProductoList({
                         onChange={actualizarProducto}
                         onRemove={eliminarProducto}
                         isOnly={productos.length === 1}
+                        catalogo={catalogo}
+                        tipoPrecio={tipoPrecio}
                     />
                 ))}
             </div>

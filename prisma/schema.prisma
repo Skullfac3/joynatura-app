@@ -30,3 +30,15 @@ model Cliente {
 
   @@map("clientes")
 }
+
+/// Catálogo de productos JoyNatura con precios mayoreo y menudeo
+model Producto {
+  id              String   @id @default(cuid())
+  numero          Int      @unique
+  nombre          String
+  precioMayoreo   Float    @map("precio_mayoreo")
+  precioMenudeo   Float    @map("precio_menudeo")
+  fechaCreacion   DateTime @default(now()) @map("fecha_creacion")
+
+  @@map("productos")
+}
